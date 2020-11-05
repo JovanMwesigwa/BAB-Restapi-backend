@@ -28,12 +28,12 @@ class Post(models.Model):
     author = models.ForeignKey(Profile, on_delete=models.CASCADE, )
     title = models.CharField(max_length=255, null=True, blank=True)
     content = models.TextField(null=True, blank=True)
-    category = models.ForeignKey(Category, related_name='category', default=5, on_delete=models.CASCADE, null=True, blank=True)
+    category = models.ForeignKey(Category, related_name='category', default=12, on_delete=models.CASCADE, null=True, blank=True)
     offer = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     image = models.ImageField(upload_to='products/%Y/%m/%d', blank=True, null=True)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    # likes = models.ManyToManyField(User, related_name='product_likes', null=True, blank=True)
+    # likes = models.ManyToManyField('LikePost', related_name='likes', null=True, blank=True)
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True )
 
@@ -58,3 +58,13 @@ class Comment(models.Model):
 
     def __str__(self):
         return 'Comment by, {} on {}'.format(self.author.user, self.post.title)
+
+
+class LikePost(models.Model):
+    liker = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
+    liked_post = models.ManyToManyField(Post, related_name='likes',)
+    date_liked = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    def __str__(self):
+        return '{} likes {}'.format(self.liker, self.liked_post)
+

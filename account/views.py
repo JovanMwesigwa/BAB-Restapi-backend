@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
-from .models import Profile
-from .serializers import ProfileSerializer
+from .models import Profile, SponsoredProfile
+from .serializers import ProfileSerializer, SponsoredProfileSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework import generics
@@ -61,5 +61,7 @@ class ProfileDestroy(generics.DestroyAPIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-
+class SponsoredProfileListView(generics.ListAPIView):
+    queryset = SponsoredProfile.objects.all()
+    serializer_class = SponsoredProfileSerializer
 

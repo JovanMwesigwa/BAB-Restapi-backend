@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseNotAllowed, HttpResponse
-from .models import Post, Comment, Category
-from .serializers import PostSerializer, CommentSerializer, CategorySerializer
+from .models import Post, Comment, Category, LikePost
+from .serializers import PostSerializer, CommentSerializer, CategorySerializer, LikePostSerializer
 # Create your views here.
 
 from rest_framework import generics
@@ -188,3 +188,30 @@ class CommentDestroyView(generics.DestroyAPIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
+
+
+class LikePostListView(generics.ListAPIView):
+    queryset = LikePost.objects.all()
+    serializer_class = LikePostSerializer
+
+
+class LikePostCreateView(generics.CreateAPIView):
+    queryset = LikePost.objects.all()
+    serializer_class = LikePostSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(liker=self.request.user.profile)
+
+
+class LikePostDeleteView(generics.DestroyAPIView):
+    queryset = LikePost.objects.all()
+    serializer_class = LikePostSerializer
+
+    def perform_destroy(self, instance):
+        instance = self.get_object()
+        current_user = self.request.user.profile
+
+        if instance != current_user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        else:
+            self.perform_destroy(instance)
