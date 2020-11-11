@@ -203,15 +203,21 @@ class LikePostCreateView(generics.CreateAPIView):
         serializer.save(liker=self.request.user.profile)
 
 
+class LikePostDetailView(generics.RetrieveAPIView):
+    queryset = LikePost.objects.all()
+    serializer_class = LikePostSerializer
+
+
 class LikePostDeleteView(generics.DestroyAPIView):
     queryset = LikePost.objects.all()
     serializer_class = LikePostSerializer
 
     def perform_destroy(self, instance):
-        instance = self.get_object()
-        current_user = self.request.user.profile
+        user = instance.liker
+        logged_in_user = self.request.user.profile
 
-        if instance != current_user:
-            return Response(status=status.HTTP_403_FORBIDDEN)
+        if user == logged_in_user:
+            instance.delete()
+            return Response({'response': 'This post has been deleted'}, status=status.HTTP_204_NO_CONTENT)
         else:
-            self.perform_destroy(instance)
+            return Response({'response': 'This post has been deleted'}, status=status.HTTP_403_FORBIDDEN)

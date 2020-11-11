@@ -66,5 +66,5 @@ class LikePost(models.Model):
     date_liked = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
-        return '{} likes {}'.format(self.liker, self.liked_post)
+        return '{} liked some post'.format(self.liker)
 
