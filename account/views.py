@@ -90,6 +90,7 @@ class UserFollowingDetailView(generics.RetrieveAPIView):
     serializer_class = UserFollowingSerializer
 
 
+# *****************Current user Followers details****************
 class CurrentUserFollowers(generics.ListAPIView):
     queryset = UserFollowing.objects.all()
     serializer_class = UserFollowingSerializer
@@ -97,6 +98,27 @@ class CurrentUserFollowers(generics.ListAPIView):
     def get_queryset(self):
         current_user = self.request.user.profile
         followers = current_user.followers.all()
+        return followers
+
+
+class CurrentUserFollowing(generics.ListAPIView):
+    queryset = UserFollowing.objects.all()
+    serializer_class = UserFollowingSerializer
+
+    def get_queryset(self):
+        current_user = self.request.user.profile
+        following = current_user.following.all()
+        return following
+
+
+# **********************Other users Followers**********************
+class FollowingDetailView(generics.ListAPIView):
+    queryset = UserFollowing.objects.all()
+    serializer_class = UserFollowingSerializer
+
+    def get_queryset(self, instance):
+        user = instance.user
+        followers = user.followers.all()
         return followers
 
 

@@ -10,7 +10,9 @@ from .views import (
     UserFollowingCreateView,
     UserFollowingDetailView,
     UserFollowingDeleteView,
-    CurrentUserFollowers
+    CurrentUserFollowers,
+    CurrentUserFollowing,
+    FollowingDetailView
 )
 
 urlpatterns = [
@@ -24,5 +26,7 @@ urlpatterns = [
     path('following/<pk>/details/', UserFollowingDetailView.as_view(), name='following-details'),
     path('following/<pk>/delete/', UserFollowingDeleteView.as_view(), name='delete-following'),
     path('followers/', CurrentUserFollowers.as_view(), name='followers'),
+    path('user_following/', CurrentUserFollowing.as_view(), name='following'),
+    path('account_followers/', FollowingDetailView.as_view(), name='account-followers'),
     path('sponsored/', SponsoredProfileListView.as_view(), name='sponsored-profile')
 ]
